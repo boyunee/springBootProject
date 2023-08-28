@@ -1,6 +1,5 @@
 package com.example.springBootProject.domain.user;
 
-
 import com.example.springBootProject.domain.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,7 +51,6 @@ public class UserEntity extends BaseTimeEntity {
     }
 
     public String getRoleKey() {
-
         return this.role.getKey();
     }
 }

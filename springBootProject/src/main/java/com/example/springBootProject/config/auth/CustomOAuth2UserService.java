@@ -5,7 +5,6 @@ import com.example.springBootProject.config.auth.dto.SessionUser;
 import com.example.springBootProject.domain.user.UserEntity;
 import com.example.springBootProject.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
 
-
-
 @RequiredArgsConstructor
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -28,15 +25,14 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2UserService<OAuth2UserRequest, OAuth2User>
-                delegate = new DefaultOAuth2UserService();
-        OAuth2User oAuth2user = delegate.loadUser(userRequest);
+        OAuth2UserService delegate = new DefaultOAuth2UserService();
+        OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
-        String registratonId = userRequest.getClientRegistration().getRegistrationId();
-        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint()
-                .getUserNameAttributeName();
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
+                .getUserInfoEndpoint().getUserNameAttributeName();
 
-        OAuthAttributes attributes = OAuthAttributes.of(registratonId, userNameAttributeName, oAuth2user.getAttributes());
+        OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         UserEntity user = saveOrUpdate(attributes);
         httpSession.setAttribute("user", new SessionUser(user));
@@ -46,16 +42,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey());
     }
-    private UserEntity saveOrUpdate(OAuthAttributes attributes){
-    UserEntity user = userRepository.findByEmail(attributes.getEmail())
-            .map(entity -> entity.update(attributes.getName(), attributes.getPicture())).orElse(attributes.toEntity());
-        return userRepository.save(user);
 
+
+    private UserEntity saveOrUpdate(OAuthAttributes attributes) {
+        UserEntity user = userRepository.findByEmail(attributes.getEmail())
+                .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
+                .orElse(attributes.toEntity());
+
+        return userRepository.save(user);
     }
 }
-
-
-
-
-
-

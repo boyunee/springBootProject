@@ -4,7 +4,6 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id 'org.jetbrains.kotlin.jvm' version '1.9.0'
 }
-
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
@@ -34,18 +33,9 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-mustache:')
 	implementation('org.springframework.boot:spring-boot-starter-oauth2-client')
 	implementation('org.springframework.session:spring-session-jdbc')
+	testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
-compileKotlin {
-	kotlinOptions {
-		jvmTarget = "1.8"
-	}
-}
-compileTestKotlin {
-	kotlinOptions {
-		jvmTarget = "1.8"
-	}
 }

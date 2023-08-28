@@ -1,10 +1,10 @@
 package com.example.springBootProject.config.auth.dto;
 
+
 import com.example.springBootProject.domain.user.Role;
 import com.example.springBootProject.domain.user.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
-
 
 import java.util.Map;
 
@@ -17,22 +17,20 @@ public class OAuthAttributes {
     private String picture;
 
     @Builder
-    public OAuthAttributes(Map<String, Object> attributes,
-                           String nameAttributeKey, String name,
-                           String email, String picture) {
+    public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, String name, String email, String picture) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
-        this.name=name;
-        this.email= email;
+        this.name = name;
+        this.email = email;
         this.picture = picture;
-
     }
 
-    public static  OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String , Object> attributes){
+    public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+
         return ofGoogle(userNameAttributeName, attributes);
     }
 
-    private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String , Object> attributes){
+    private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
@@ -42,13 +40,14 @@ public class OAuthAttributes {
                 .build();
     }
 
-    public UserEntity toEntity(){
+
+
+    public UserEntity toEntity() {
         return UserEntity.builder()
                 .name(name)
                 .email(email)
                 .picture(picture)
                 .role(Role.GUEST)
                 .build();
-
     }
 }
